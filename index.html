@@ -5,10 +5,6 @@
     <title id="page-title">Stamina Calculator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        html {
-            /* background-color: red; */
-        }
-
         body {
             font-family: Arial, sans-serif;
             background-color: #eee;
@@ -87,19 +83,27 @@
             border-radius: 8px;
             border: 1px solid #ccc;
         }
+
         button {
             padding: 4px 16px;
             border: none;
             border-radius: 8px;
             color: #ccc;
             cursor: pointer;
-
         }
 
         table {
             width: 80%;
             border-collapse: collapse;
             margin-bottom: 8px;
+        }
+
+        span#total-tokens-needed,
+        span#remaining-tokens-needed,
+        span#remaining-missions-needed,
+        span#total-stamina-needed {
+            color: #128afa;
+            font-weight: bold;
         }
 
         blockquote.error-message {
