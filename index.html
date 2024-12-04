@@ -3,24 +3,27 @@
 
 <head>
     <title id="page-title">Stamina Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         html {
             /* background-color: red; */
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
             font-family: Arial, sans-serif;
             background-color: #eee;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
         }
 
-        #container {
+        div.container {
             width: 100%;
-            max-width: 600px;
+            max-width: 350px;
             margin: 0 auto;
             padding: 16px;
             background-color: #fff;
@@ -69,6 +72,7 @@
 
         input[type="number"],
         select {
+            max-width: 100px;
             padding: 4px;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -98,7 +102,7 @@
 </head>
 
 <body>
-    <div id="container">
+    <div class="container">
         <header id="header">
             <h1 id="header-title">Stamina Calculator</h1>
             <h1 id="header-image" style="display: none;"><img alt="Stamina Calculator" src="./logo_en.png" /></h1>
