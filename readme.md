@@ -1,6 +1,6 @@
 # AP / Stamina Calculator
 
-This is an AP (Stamina) calculator designed for Blue Archive events.
+This is an AP (Stamina) calculator designed for BlueArchive events.
 
 ~~May also be applicable to other games.~~
 
@@ -10,7 +10,7 @@ This is an AP (Stamina) calculator designed for Blue Archive events.
 
 ## How to Use
 
-1. Open [AP Calculator]().
+1. Open [AP Calculator](https://undecv.github.io/APCalculator/).
 2. Enter the values.
 3. View the results.
 

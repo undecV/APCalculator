@@ -10,6 +10,7 @@
 
 ## 使用方法
 
+0. 打開[AP計算器](https://undecv.github.io/APCalculator/)。
 1. 輸入數值；
 2. 看結果。
 
