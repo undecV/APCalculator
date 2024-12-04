@@ -28,3 +28,11 @@
 - 如果你會 JSON，直接修改「導入、導出」的內容可能比較快。
 - ~~筆者不會 JavaSctript，這個網頁 99.87% 由 ChatGPT 編寫完成。~~
 - ~~如果怕數值不對可以丟到 `stamina.ipynb` 驗證。~~
+
+## 參考
+
+### 關於 logo
+
+- nulla2011/Bluearchive-logo: [GitHub](https://github.com/nulla2011/Bluearchive-logo), [Page](https://lab.nulla.top/ba-logo)
+- appleneko2001/bluearchive-logo: [GitHub](https://github.com/appleneko2001/bluearchive-logo), [Page](https://appleneko2001-bluearchive-logo.vercel.app/)
+- [Blue Archive Logo Generator](https://symbolon.pages.dev/)
