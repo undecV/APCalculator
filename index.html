@@ -40,6 +40,15 @@
             padding: 8px;
         }
 
+        footer {
+            text-align: center;
+        }
+
+        footer a {
+            color: #128afa;
+            text-decoration: None;
+        }
+
         header {
             background-color: #fff;
             border-radius: 16px;
@@ -59,6 +68,7 @@
 
         header h1#header-image img {
             height: 100px;
+
         }
 
         ul {
@@ -173,6 +183,10 @@
         <blockquote id="error-message" class="error-message"></blockquote>
         <h2 id="import-export-title">Import/Export</h2>
         <textarea id="json-output"></textarea>
+    
+        <footer>
+            <p id="footer-text"><a href="https://github.com/undecV/APCalculator">GitHub</a></p>
+        </footer>
     </div>
 
     <script>
@@ -215,7 +229,8 @@
                     'import-export-title': 'Import/Export',
                     'error-message-invalid-json': 'Invalid JSON',
                     'delete-row-button': '❌',
-                    'add-row-button': '➕'
+                    'add-row-button': '➕',
+                    'footer-text': '<a href="https://github.com/undecV/APCalculator">GitHub</a>'
                 },
                 'zh-TW': {
                     '_logo-image': './assets/logo_zh-TW.png',
@@ -235,7 +250,8 @@
                     'import-export-title': '匯入/匯出',
                     'error-message-invalid-json': '無效的 JSON',
                     'delete-row-button': '❌',
-                    'add-row-button': '➕'
+                    'add-row-button': '➕',
+                    'footer-text': '<a href="https://github.com/undecV/APCalculator">GitHub</a>'
                 }
             }
         };
@@ -296,7 +312,7 @@
                     if (key.startsWith('_') | key.startsWith('header-title')) { continue }
                     const element = document.getElementById(key);
                     if (element) {
-                        element.textContent = translations[key];
+                        element.innerHTML = translations[key];
                     }
                 }
             }
