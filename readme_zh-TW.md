@@ -14,6 +14,8 @@
 1. 輸入數值；
 2. 看結果。
 
+> 提示：若只需進行簡單計算，換句話說，已經知道「所需代幣總數」（Total Tokens Needed），可以將商店商品設定數量為「1」，設定價格為「所需代幣總數」。例如：`{"shop":[{"quantity":1,"price":1000}],"currentTokens":250,"tokensPerMission":50,"staminaPerMission":20}`。
+
 ## 功能
 
 - 支援語言：英語、正體中文。
