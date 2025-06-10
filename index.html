@@ -187,7 +187,7 @@
         <blockquote id="error-message" class="error-message"></blockquote>
         <h2 id="import-export-title">Import/Export</h2>
         <textarea id="json-output"></textarea>
-    
+
         <footer>
             <p id="footer-text"><a href="https://github.com/undecV/APCalculator">GitHub</a></p>
         </footer>
@@ -285,6 +285,7 @@
             renderJsonOutput() {
                 const jsonOutput = document.getElementById('json-output');
                 jsonOutput.value = JSON.stringify(model.data);
+                localStorage.setItem('apcalc_data', JSON.stringify(model.data));
             },
             showError(message) {
                 document.getElementById('error-message').textContent = message;
@@ -324,11 +325,29 @@
 
         const controller = {
             init() {
+                this.getLocalStorageData();
                 view.updateLanguage(model.currentLanguage);
                 this.bindEvents();
                 view.renderTable();
                 view.renderResults();
                 view.renderJsonOutput();
+            },
+            getLocalStorageData() {
+                const saved = localStorage.getItem('apcalc_data');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        Object.assign(model.data, parsed);
+                    } catch (e) {
+                        console.warn("Invalid saved data:", e);
+                    }
+                }
+
+                const savedLanguage = localStorage.getItem('apcalc_language');
+                if (savedLanguage && model.languages[savedLanguage]) {
+                    model.currentLanguage = savedLanguage;
+                    document.getElementById('language-selector').value = savedLanguage;
+                }
             },
             bindEvents() {
                 document.getElementById('add-row-button').addEventListener('click', this.addRow);
@@ -413,9 +432,12 @@
                 view.renderTable();
                 view.renderResults();
                 view.renderJsonOutput();
+                localStorage.setItem('apcalc_language', selectedLanguage);
             }
         };
 
         controller.init();
     </script>
 </body>
+
+</html>

@@ -23,6 +23,7 @@ This is an AP (Stamina) calculator designed for BlueArchive events.
 - Basic input validation.
 - Supports JSON import and export.
 - Single HTML file.
+- 🆕 The input and language settings are now saved automatically.
 
 ## Notes
 
