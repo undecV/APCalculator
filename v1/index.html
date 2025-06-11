@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <title id="page-title">Stamina Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eee;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        div.container {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 16px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        textarea {
+            margin: 0 16px 0 16px;
+            width: 90%;
+            height: 120px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        footer {
+            text-align: center;
+        }
+
+        footer a {
+            color: #128afa;
+            text-decoration: None;
+        }
+
+        header {
+            background-color: #fff;
+            border-radius: 16px;
+        }
+
+        header h1 {
+            text-align: center;
+            color: #128afa;
+            font-family: sans-serif;
+            font-weight: bolder;
+            font-style: italic;
+        }
+
+        header h1#header-title {
+            padding: 24px;
+        }
+
+        header h1#header-image img {
+            height: 100px;
+
+        }
+
+        ul {
+            list-style: none;
+            /* padding: 0; */
+        }
+
+        ul li {
+            margin-bottom: 4px;
+        }
+
+        input[type="number"],
+        select {
+            max-width: 100px;
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 4px 16px;
+            border: none;
+            border-radius: 8px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
+
+        span#total-tokens-needed,
+        span#remaining-tokens-needed,
+        span#remaining-missions-needed,
+        span#total-stamina-needed {
+            color: #128afa;
+            font-weight: bold;
+        }
+
+        blockquote.error-message {
+            padding: 6px 12px;
+            background-color: rgba(255, 0, 0, 0.2);
+            border-radius: 8px;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header id="header">
+            <h1 id="header-title">Stamina Calculator</h1>
+            <h1 id="header-image" style="display: none;"><img alt="Stamina Calculator" src="./logo_en.png" /></h1>
+        </header>
+        <form id="language-selector-form">
+            <label for="language-selector" id="language-selector-label">Language:</label>
+            <select id="language-selector">
+                <option value="en" selected>English</option>
+                <option value="zh-TW">正體中文</option>
+            </select>
+        </form>
+        <form id="input-form">
+            <h2 id="input-title">Input</h2>
+            <ul>
+                <li>
+                    <table id="shop-table">
+                        <thead>
+                            <tr>
+                                <th id="quantity-col-label">Quantity</th>
+                                <th id="price-col-label">Price</th>
+                                <th id="delete-col-label"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic rows -->
+                            <!-- Example
+                            <td><input type="number" value="${item.quantity}" min="0" step="1" data-index="${index}" data-key="quantity"></td>
+                            <td><input type="number" value="${item.price}" min="0" step="1" data-index="${index}" data-key="price"></td>
+                            <td><button type="button" data-index="${index}" class="delete-row">${model.languages[model.currentLanguage]['delete-row-button']}</button></td>
+                            -->
+                        </tbody>
+                    </table>
+                    <button type="button" id="add-row-button">➕</button>
+                </li>
+                <li>
+                    <label for="current-tokens" id="current-tokens-label">Current Tokens:</label>
+                    <input type="number" id="current-tokens" value="3472" min="0" step="1">
+                </li>
+                <li>
+                    <label for="tokens-per-mission" id="tokens-per-mission-label">Tokens Per Mission:</label>
+                    <input type="number" id="tokens-per-mission" value="72" min="0" step="1">
+                </li>
+                <li>
+                    <label for="stamina-per-mission" id="stamina-per-mission-label">Stamina Per Mission:</label>
+                    <input type="number" id="stamina-per-mission" value="20" min="0" step="1">
+                </li>
+            </ul>
+        </form>
+        <h2 id="results-title">Results</h2>
+        <ul id="results">
+            <li>
+                <span id="total-tokens-needed-label">Total Tokens Needed: </span>
+                <span id="total-tokens-needed">0</span>
+            </li>
+            <li>
+                <span id="remaining-tokens-needed-label">Remaining Tokens Needed: </span>
+                <span id="remaining-tokens-needed">0</span>
+            </li>
+            <li>
+                <span id="remaining-missions-needed-label">Remaining Missions Needed: </span>
+                <span id="remaining-missions-needed">0.00</span>
+            </li>
+            <li>
+                <span id="total-stamina-needed-label">Total Stamina Needed: </span>
+                <span id="total-stamina-needed">0</span>
+            </li>
+        </ul>
+        <blockquote id="error-message" class="error-message"></blockquote>
+        <h2 id="import-export-title">Import/Export</h2>
+        <textarea id="json-output"></textarea>
+
+        <footer>
+            <p id="footer-text"><a href="https://github.com/undecV/APCalculator">GitHub</a></p>
+        </footer>
+    </div>
+
+    <script>
+        const model = {
+            data: {
+                shop: [
+                    { quantity: 70, price: 5 },
+                    { quantity: 35, price: 15 },
+                    { quantity: 20, price: 50 },
+                    { quantity: 10, price: 200 }
+                ],
+                currentTokens: 3472,
+                tokensPerMission: 72,
+                staminaPerMission: 20
+            },
+            calculateResults() {
+                const totalTokensNeeded = model.data.shop.reduce((sum, item) => sum + item.quantity * item.price, 0);
+                const remainingTokensNeeded = totalTokensNeeded - model.data.currentTokens;
+                const remainingMissionsNeeded = remainingTokensNeeded / model.data.tokensPerMission;
+                const totalStaminaNeeded = Math.ceil(remainingMissionsNeeded) * model.data.staminaPerMission;
+                return { totalTokensNeeded, remainingTokensNeeded, remainingMissionsNeeded, totalStaminaNeeded };
+            },
+            currentLanguage: 'en',
+            languages: {
+                'en': {
+                    '_logo-image': './assets/logo_en.png',
+                    'page-title': 'Stamina Calculator',
+                    'header-title': 'Stamina Calculator',
+                    'input-title': 'Input',
+                    'quantity-col-label': 'Quantity',
+                    'price-col-label': 'Price',
+                    'current-tokens-label': 'Current Tokens: ',
+                    'tokens-per-mission-label': 'Tokens Per Mission: ',
+                    'stamina-per-mission-label': 'Stamina Per Mission: ',
+                    'results-title': 'Results',
+                    'total-tokens-needed-label': 'Total Tokens Needed: ',
+                    'remaining-tokens-needed-label': 'Remaining Tokens Needed: ',
+                    'remaining-missions-needed-label': 'Remaining Missions Needed: ',
+                    'total-stamina-needed-label': 'Total Stamina Needed: ',
+                    'import-export-title': 'Import / Export',
+                    'error-message-invalid-json': 'Invalid JSON',
+                    'delete-row-button': '❌',
+                    'add-row-button': '➕',
+                    'footer-text': '<a href="https://github.com/undecV/APCalculator">GitHub</a>'
+                },
+                'zh-TW': {
+                    '_logo-image': './assets/logo_zh-TW.png',
+                    'page-title': '體力計算器',
+                    'header-title': '體力計算器',
+                    'input-title': '輸入',
+                    'quantity-col-label': '數量',
+                    'price-col-label': '價格',
+                    'current-tokens-label': '目前代幣數：',
+                    'tokens-per-mission-label': '每次任務獲得代幣：',
+                    'stamina-per-mission-label': '每次任務體力消耗：',
+                    'results-title': '結果',
+                    'total-tokens-needed-label': '所需代幣總數：',
+                    'remaining-tokens-needed-label': '剩餘所需代幣：',
+                    'remaining-missions-needed-label': '剩餘所需任務次數：',
+                    'total-stamina-needed-label': '所需體力總數：',
+                    'import-export-title': '匯入／匯出',
+                    'error-message-invalid-json': '無效的 JSON',
+                    'delete-row-button': '❌',
+                    'add-row-button': '➕',
+                    'footer-text': '<a href="https://github.com/undecV/APCalculator">GitHub</a>'
+                }
+            }
+        };
+
+        const view = {
+            renderTable() {
+                const tbody = document.querySelector("#shop-table tbody");
+                tbody.innerHTML = '';
+                model.data.shop.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="number" value="${item.quantity}" min="0" step="1" data-index="${index}" data-key="quantity"></td>
+                        <td><input type="number" value="${item.price}" min="0" step="1" data-index="${index}" data-key="price"></td>
+                        <td><button type="button" data-index="${index}" class="delete-row">${model.languages[model.currentLanguage]['delete-row-button']}</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            },
+            renderResults() {
+                const results = model.calculateResults();
+                document.getElementById('total-tokens-needed').textContent = `${results.totalTokensNeeded}`;
+                document.getElementById('remaining-tokens-needed').textContent = `${results.remainingTokensNeeded}`;
+                document.getElementById('remaining-missions-needed').textContent = `${results.remainingMissionsNeeded.toFixed(2)}`;
+                document.getElementById('total-stamina-needed').textContent = `${results.totalStaminaNeeded}`;
+                view.clearError();
+            },
+            renderJsonOutput() {
+                const jsonOutput = document.getElementById('json-output');
+                jsonOutput.value = JSON.stringify(model.data);
+                localStorage.setItem('apcalc_data', JSON.stringify(model.data));
+            },
+            showError(message) {
+                document.getElementById('error-message').textContent = message;
+                document.getElementById('error-message').style.visibility = 'visible';
+            },
+            clearError() {
+                document.getElementById('error-message').textContent = '';
+                document.getElementById('error-message').style.visibility = 'hidden';
+            },
+            updateLanguage(language) {
+                document.documentElement.lang = language;
+                model.currentLanguage = language;
+                const translations = model.languages[language];
+
+                const header = document.getElementById('header');
+                const logoImage = translations['_logo-image'];
+                const headerTitle = translations['header-title'];
+
+                if (logoImage) {
+                    const img = new Image();
+                    img.onload = () => header.innerHTML = `<h1 id="header-image"><img alt="${headerTitle}" src="${logoImage}"/></h1>`;
+                    img.onerror = () => header.innerHTML = `<h1 id="header-title">${headerTitle}</h1>`;
+                    img.src = logoImage;
+                } else {
+                    header.innerHTML = `<h1 id="header-title">${headerTitle}</h1>`;
+                }
+
+                for (const key in translations) {
+                    if (key.startsWith('_') | key.startsWith('header-title')) { continue }
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.innerHTML = translations[key];
+                    }
+                }
+            }
+        };
+
+        const controller = {
+            init() {
+                this.getLocalStorageData();
+                view.updateLanguage(model.currentLanguage);
+                this.bindEvents();
+                view.renderTable();
+                view.renderResults();
+                view.renderJsonOutput();
+            },
+            getLocalStorageData() {
+                const saved = localStorage.getItem('apcalc_data');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        Object.assign(model.data, parsed);
+                    } catch (e) {
+                        console.warn("Invalid saved data:", e);
+                    }
+                }
+
+                const savedLanguage = localStorage.getItem('apcalc_language');
+                if (savedLanguage && model.languages[savedLanguage]) {
+                    model.currentLanguage = savedLanguage;
+                    document.getElementById('language-selector').value = savedLanguage;
+                }
+            },
+            bindEvents() {
+                document.getElementById('add-row-button').addEventListener('click', this.addRow);
+                document.querySelector('#shop-table tbody').addEventListener('input', this.updateShopData);
+                document.querySelector('#shop-table tbody').addEventListener('click', this.deleteRow);
+                document.getElementById('current-tokens').addEventListener('input', this.updateInput('currentTokens'));
+                document.getElementById('tokens-per-mission').addEventListener('input', this.updateInput('tokensPerMission'));
+                document.getElementById('stamina-per-mission').addEventListener('input', this.updateInput('staminaPerMission'));
+                document.getElementById('json-output').addEventListener('input', this.updateJsonOutput);
+                document.getElementById('language-selector').addEventListener('change', this.changeLanguage);
+            },
+            addRow() {
+                model.data.shop.push({ quantity: 0, price: 0 });
+                view.renderTable();
+                view.renderResults();
+                view.renderJsonOutput();
+            },
+            updateShopData(event) {
+                const index = event.target.dataset.index;
+                const key = event.target.dataset.key;
+                if (index !== undefined && key) {
+                    let value = parseFloat(event.target.value) || 0;
+                    value = Math.max(0, Math.floor(value));
+                    event.target.value = value;
+                    model.data.shop[index][key] = value;
+                    view.renderResults();
+                    view.renderJsonOutput();
+                }
+            },
+            deleteRow(event) {
+                if (event.target.classList.contains('delete-row')) {
+                    const index = event.target.dataset.index;
+                    model.data.shop.splice(index, 1);
+                    view.renderTable();
+                    view.renderResults();
+                    view.renderJsonOutput();
+                }
+            },
+            updateInput(key) {
+                return (event) => {
+                    let value = parseFloat(event.target.value) || 0;
+                    value = Math.max(0, Math.floor(value));
+                    event.target.value = value;
+                    model.data[key] = value;
+                    view.renderResults();
+                    view.renderJsonOutput();
+                };
+            },
+            updateJsonOutput(event) {
+                try {
+                    const parsed = JSON.parse(event.target.value);
+                    if (
+                        parsed.shop && Array.isArray(parsed.shop) &&
+                        parsed.shop.every(item => item.quantity >= 0 && item.price >= 0) &&
+                        parsed.currentTokens >= 0 &&
+                        parsed.tokensPerMission >= 0 &&
+                        parsed.staminaPerMission >= 0
+                    ) {
+                        parsed.shop.forEach(item => {
+                            item.quantity = Math.max(0, Math.floor(item.quantity));
+                            item.price = Math.max(0, Math.floor(item.price));
+                        });
+                        parsed.currentTokens = Math.max(0, Math.floor(parsed.currentTokens));
+                        parsed.tokensPerMission = Math.max(0, Math.floor(parsed.tokensPerMission));
+                        parsed.staminaPerMission = Math.max(0, Math.floor(parsed.staminaPerMission));
+                        model.data = parsed;
+                        view.renderTable();
+                        view.renderResults();
+                        view.renderJsonOutput();
+                        view.clearError();
+                    } else {
+                        throw new Error('Validation failed');
+                    }
+                } catch {
+                    view.showError(model.languages[model.currentLanguage]['error-message-invalid-json']);
+                }
+            },
+            changeLanguage(event) {
+                const selectedLanguage = event.target.value;
+                model.currentLanguage = selectedLanguage;
+                view.updateLanguage(selectedLanguage);
+                view.renderTable();
+                view.renderResults();
+                view.renderJsonOutput();
+                localStorage.setItem('apcalc_language', selectedLanguage);
+            }
+        };
+
+        controller.init();
+    </script>
+</body>
+
+</html>
