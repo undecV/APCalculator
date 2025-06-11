@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" class="is-dark is-rounded">
+
+<head>
+  <title data-i18n="page-title">Stamina Calculator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/5.0.2/tocas.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/5.0.2/tocas.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
+
+  <style>
+    div.ts-container.is-very-very-narrow {
+      width: 24em;
+    }
+  </style>
+</head>
+
+
+<body>
+  <div class="ts-container is-very-narrow is-very-very-narrow has-vertically-padded-big ts-wrap is-vertical">
+    <header class="ts-box has-light is-center-aligned is-big">
+      <div class="ts-image"><img class="header-image" alt="Stamina Calculator" src="./assets/images/logo.png" /></div>
+    </header>
+
+    <div class="ts-box">
+      <div class="ts-content is-dense ts-wrap is-compact is-vertical">
+        <form id="theme-selector" class="ts-control is-wide">
+          <label data-i18n="theme-selector-label" class="is-start-aligned" for="theme-selector">Theme:</label>
+          <div class="ts-selection is-circular is-fluid is-small">
+            <label class="item">
+              <input id="theme-selector-light" type="radio" name="theme-selector" value="light">
+              <span class="text ts-icon is-sun-icon"></span>
+            </label>
+            <label class="item">
+              <input id="theme-selector-dark" type="radio" name="theme-selector" value="dark" checked>
+              <span class="text ts-icon is-moon-icon"></span>
+            </label>
+          </div>
+        </form>
+
+        <form class="ts-control is-wide">
+          <label data-i18n="language-selector-label" class="is-start-aligned" for="language-selector">Language:</label>
+          <div class="ts-select is-small is-dense ">
+            <select id="language-selector" name="language-selector">
+              <option value="en" selected>English</option>
+              <option value="zh-TW">正體中文</option>
+            </select>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <form class="ts-box">
+      <div class="ts-content is-dense">
+        <h2 data-i18n="input-header" class="ts-header is-heavy">Input</h2>
+      </div>
+
+      <div class="ts-content is-dense ts-wrap is-compact is-vertical">
+        <div class="ts-box">
+          <table id="shop-table" class="ts-table is-striped is-dense is-compact is-small">
+            <thead>
+              <tr>
+                <th class="is-center-aligned"></th>
+                <th class="is-center-aligned">
+                  <span class="ts-icon is-boxes-stacked-icon"></span><span> </span>
+                  <span data-i18n="quantity-table-header">Quantity</span>
+                </th>
+                <th class="is-center-aligned">
+                  <span class="ts-icon is-dollar-sign-icon"></span><span> </span>
+                  <span data-i18n="price-table-header">Price</span>
+                </th>
+                </th>
+                <th class="is-center-aligned"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tbody>
+              <template id="shop-row-template">
+                <tr class="is-middle-aligned">
+                  <td>
+                    <label class="ts-checkbox is-solo">
+                      <input data-role="enable" data-key="disable" type="checkbox" checked>
+                    </label>
+                  </td>
+                  <td>
+                    <div class="ts-input is-small is-dense">
+                      <input data-role="quantity" data-key="quantity" type="number" value="0" min="0">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ts-input is-small is-dense">
+                      <input data-role="price" data-key="price" type="number" value="0" min="0">
+                    </div>
+                  </td>
+                  <td>
+                    <button data-role="delete" type="button"
+                      class="ts-button is-icon is-negative is-outlined is-small is-dense">
+                      <span class="ts-icon is-trash-icon is-bold"></span>
+                    </button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="4" class="is-center-aligned">
+                  <button id="add-row-button" type="button"
+                    class="ts-button is-small is-dense is-secondary is-outlined is-icon">
+                    <span class="ts-icon is-plus-icon is-bold"></span>
+                  </button>
+                </th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="ts-control is-wide">
+          <label data-i18n="current-tokens-label" for="current-tokens">Current Tokens:</label>
+          <div class="ts-input is-start-icon is-small is-dense">
+            <span class="ts-icon is-sack-dollar-icon"></span>
+            <input id="current-tokens-value" type="number" value="0" min="0" step="1">
+          </div>
+        </div>
+        <div class="ts-control is-wide">
+          <label data-i18n="tokens-per-mission-label" for="tokens-per-mission">Tokens Per Mission:</label>
+          <div class="ts-input is-start-icon is-small is-dense">
+            <span class="ts-icon is-hand-holding-dollar-icon"></span>
+            <input id="tokens-per-mission-value" type="number" value="0" min="0" step="1">
+          </div>
+        </div>
+        <div class="ts-control is-wide">
+          <label data-i18n="stamina-per-mission-label" for="stamina-per-mission">Stamina Per Mission:</label>
+          <div class="ts-input is-start-icon is-small is-dense">
+            <span class="ts-icon is-mug-saucer-icon"></span>
+            <input id="stamina-per-mission-value" type="number" value="0" min="0" step="1">
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="ts-box">
+      <div class="ts-content is-dense">
+        <h2 data-i18n="results-header" class="ts-header is-heavy">Results</h2>
+      </div>
+
+      <div class="ts-content ts-grid is-compact">
+
+        <div class="column is-16-wide ts-box">
+          <div class="ts-content is-dense">
+            <div class="ts-wrap is-middle-aligned">
+              <div class="ts-gauge is-uplifted">
+                <div id="completion-progress-bar" class="bar" style="--value: 87">
+                  <div class="text">
+                    <span class="ts-icon is-big is-check-double-icon"></span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="ts-statistic">
+                  <div id="completion-progress-value" class="value">87%</div>
+                </div>
+                <span data-i18n="completion-progress-label">
+                  Completion progress
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="symbol">
+            <span class="ts-icon is-check-double-icon"></span>
+          </div>
+        </div>
+
+        <div class="column is-8-wide ts-box">
+          <div class=" ts-content is-dense">
+            <div data-i18n="total-tokens-label" class="ts-text is-label">Total Tokens</div>
+            <div class="ts-statistic">
+              <div id="total-tokens-value" class="value">10,000</div>
+            </div>
+          </div>
+          <div class="symbol">
+            <span class="ts-icon is-money-check-dollar-icon"></span>
+          </div>
+        </div>
+
+        <div class="column is-8-wide ts-box">
+          <div class="ts-content is-dense">
+            <div data-i18n="remaining-tokens-label" class="ts-text is-label">Remaining Tokens</div>
+            <div class="ts-statistic">
+              <div id="remaining-tokens-value" class="value">10,000</div>
+            </div>
+          </div>
+          <div class="symbol">
+            <span class="ts-icon is-circle-dollar-to-slot-icon"></span>
+          </div>
+        </div>
+
+        <div class="column is-8-wide ts-box">
+          <div class="ts-content is-dense">
+            <div data-i18n="remaining-missions-label" class="ts-text is-label">Remaining Missions</div>
+            <div class="ts-statistic">
+              <div id="remaining-missions-value" class="value">20.11</div>
+              <div data-i18n="remaining-stamina-unit" class="unit">times</div>
+            </div>
+          </div>
+          <div class="symbol">
+            <span class="ts-icon is-repeat-icon"></span>
+          </div>
+        </div>
+        <div class="column is-8-wide ts-box">
+          <div class="ts-content is-dense">
+            <div data-i18n="remaining-stamina-label" class="ts-text is-label">Remaining Stamina</div>
+            <div class="ts-statistic">
+              <div id="remaining-stamina-value" class="value">10,000</div>
+            </div>
+          </div>
+          <div class="symbol">
+            <span class="ts-icon is-mug-hot-icon"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ts-box">
+      <div class="ts-content is-dense">
+        <h2 data-i18n="export-header" class="ts-header is-heavy">Import / Export</h2>
+      </div>
+      <div id="error-message-notice" class="ts-content is-dense has-hidden">
+        <div class="ts-notice is-small is-dense is-negative">
+          <div class="title">ERROR</div>
+          <div id="error-message-content" class="content">Sample error message.</div>
+        </div>
+      </div>
+      <div class="ts-content is-dense ">
+        <div class="ts-input is-resizable is-small is-dense">
+          <textarea id="data-export-textarea" rows="7" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="ts-wrap is-compact is-center-aligned">
+      <div class="ts-buttons">
+        <button id="reset-data-button"
+          class="ts-button is-start-icon is-short is-small is-dense is-negative is-outlined">
+          <span class="ts-icon is-rotate-left-icon"></span><span> </span>
+          <span data-i18n="reset-data-button-label">Reset Data</span>
+        </button>
+        <button id="reset-all-button" class="ts-button is-start-icon is-short is-small is-dense is-negative">
+          <span class="ts-icon is-clock-rotate-left-icon"></span><span> </span>
+          <span data-i18n="reset-all-button-label">Reset All</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="ts-wrap is-vertical is-compact is-center-aligned">
+      <div data-i18n="disclaimer" class="ts-text is-description is-small is-center-aligned">
+        Schale and Yuuka<br />may not endorse the calculation results.
+      </div>
+      <div class="ts-meta is-secondary is-small">
+        <a class="item" href="https://github.com/undecV/APCalculator">GitHub</a>
+        <a class="item" href="https://undecV.github.io/">My Blog</a>
+      </div>
+    </div>
+  </div>
+  <script src="./assets/scripts/index.js"></script>
+</body>
+
+</html>
