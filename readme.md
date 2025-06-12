@@ -28,6 +28,7 @@ If only simple calculations are required, in other words, if the "Total Tokens N
 - 🆕 Supported themes: Light, Dark.
 - Real-time interaction, input validation.
 - Support JSON import and export.
+- 🆕 Enable \ disable, add \ delete data rows.
 - 🆕 Will remember your input data and interface settings.
 - 🆕 Reset data and settings.
 - Completely offline.
@@ -42,10 +43,8 @@ If only simple calculations are required, in other words, if the "Total Tokens N
 
 ## Reference
 
-Theme: [Tocas UI](https://github.com/teacat/tocas)
-
-Logo:
-
-- nulla2011/Bluearchive-logo: [GitHub](https://github.com/nulla2011/Bluearchive-logo), [Page](https://lab.nulla.top/ba-logo)
-- appleneko2001/bluearchive-logo: [GitHub](https://github.com/appleneko2001/bluearchive-logo), [Page](https://appleneko2001-bluearchive-logo.vercel.app/)
-- [Blue Archive Logo Generator](https://symbolon.pages.dev/)
+- Theme: [Tocas UI](https://github.com/teacat/tocas) (MIT)
+- Logo:
+    - nulla2011/Bluearchive-logo: [GitHub](https://github.com/nulla2011/Bluearchive-logo), [Page](https://lab.nulla.top/ba-logo)
+    - appleneko2001/bluearchive-logo: [GitHub](https://github.com/appleneko2001/bluearchive-logo), [Page](https://appleneko2001-bluearchive-logo.vercel.app/)
+    - [Blue Archive Logo Generator](https://symbolon.pages.dev/)

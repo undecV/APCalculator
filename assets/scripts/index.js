@@ -241,10 +241,18 @@ class View {
         dataExportTextarea.addEventListener("input", (event) => this.controller.onDataExportTextareaChange(event));
         const addRowButton = document.getElementById("add-row-button");
         addRowButton.addEventListener("click", (event) => this.controller.onAddRowButtonClick(event));
+        const copyExportButton = document.getElementById("copy-export-button");
+        copyExportButton.addEventListener("click", (event) => this.controller.onCopyExportButtonClick(event));
         const resetDataButton = document.getElementById("reset-data-button");
         resetDataButton.addEventListener("click", (event) => this.controller.onResetDataClick(event));
         const resetAllButton = document.getElementById("reset-all-button");
         resetAllButton.addEventListener("click", (event) => this.controller.onResetAllClick(event));
+        const currentTokensInput = document.getElementById("current-tokens-value");
+        currentTokensInput.addEventListener("input", (event) => this.controller.onCurrentTokensChange(event));
+        const tokensPerMissionInput = document.getElementById("tokens-per-mission-value");
+        tokensPerMissionInput.addEventListener("input", (event) => this.controller.onTokensPerMissionChange(event));
+        const staminaPerMissionInput = document.getElementById("stamina-per-mission-value");
+        staminaPerMissionInput.addEventListener("input", (event) => this.controller.onStaminaPerMissionChange(event));
     }
     updateTheme(theme) {
         switch (theme) {
@@ -294,9 +302,11 @@ class View {
             const quantityInput = rowElement.querySelector('[data-role="quantity"]');
             quantityInput.value = item.quantity.toString();
             quantityInput.dataset.index = index.toString();
+            quantityInput.parentElement.classList.toggle("is-solid", !item.enable);
             const priceInput = rowElement.querySelector('[data-role="price"]');
             priceInput.value = item.price.toString();
             priceInput.dataset.index = index.toString();
+            priceInput.parentElement.classList.toggle("is-solid", !item.enable);
             const deleteButton = rowElement.querySelector('[data-role="delete"]');
             deleteButton.dataset.index = index.toString();
             checkbox.addEventListener("change", (event) => {
@@ -396,6 +406,7 @@ class Controller {
         const element = event.currentTarget;
         const index = Number(element.dataset.index);
         this.model.data.updateShopItem(index, { enable: element.checked });
+        this.view.renderTable(this.model.data);
         this.view.renderResults(this.model.data);
         this.view.renderExport(this.model.data);
         this.setLocalStorage();
@@ -438,6 +449,27 @@ class Controller {
         this.view.renderExport(this.model.data);
         this.setLocalStorage();
     }
+    onCurrentTokensChange(event) {
+        const element = event.currentTarget;
+        this.model.data.currentTokens = Number(element.value);
+        this.view.renderResults(this.model.data);
+        this.view.renderExport(this.model.data);
+        this.setLocalStorage();
+    }
+    onTokensPerMissionChange(event) {
+        const element = event.currentTarget;
+        this.model.data.tokensPerMission = Number(element.value);
+        this.view.renderResults(this.model.data);
+        this.view.renderExport(this.model.data);
+        this.setLocalStorage();
+    }
+    onStaminaPerMissionChange(event) {
+        const element = event.currentTarget;
+        this.model.data.staminaPerMission = Number(element.value);
+        this.view.renderResults(this.model.data);
+        this.view.renderExport(this.model.data);
+        this.setLocalStorage();
+    }
     onDataExportTextareaChange(event) {
         const element = event.currentTarget;
         try {
@@ -452,6 +484,9 @@ class Controller {
             this.view.displayError(e instanceof Error ? e.message : String(e));
             return;
         }
+    }
+    onCopyExportButtonClick(event) {
+        navigator.clipboard.writeText(JSON.stringify(this.model.data));
     }
     onResetDataClick(event) {
         localStorage.removeItem("calc-data");

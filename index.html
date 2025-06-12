@@ -5,19 +5,29 @@
   <title data-i18n="page-title">Stamina Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/5.0.2/tocas.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/5.0.2/tocas.min.js"></script>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-  
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
 
   <style>
     div.ts-container.is-very-very-narrow {
       width: 24em;
+    }
+
+    .ts-button.is-negative.is-outlined {
+      color: var(--ts-negative-600);
+    }
+
+    .ts-button.is-negative {
+      border-color: var(--ts-negative-700);
+      background: var(--ts-negative-700);
     }
   </style>
 </head>
@@ -47,7 +57,7 @@
 
         <form class="ts-control is-wide">
           <label data-i18n="language-selector-label" class="is-start-aligned" for="language-selector">Language:</label>
-          <div class="ts-select is-small is-dense ">
+          <div class="ts-select is-small is-dense">
             <select id="language-selector" name="language-selector">
               <option value="en" selected>English</option>
               <option value="zh-TW">正體中文</option>
@@ -64,7 +74,7 @@
 
       <div class="ts-content is-dense ts-wrap is-compact is-vertical">
         <div class="ts-box">
-          <table id="shop-table" class="ts-table is-striped is-dense is-compact is-small">
+          <table id="shop-table" class="ts-table is-dense is-compact is-small">
             <thead>
               <tr>
                 <th class="is-center-aligned"></th>
@@ -229,8 +239,24 @@
     </div>
 
     <div class="ts-box">
-      <div class="ts-content is-dense">
-        <h2 data-i18n="export-header" class="ts-header is-heavy">Import / Export</h2>
+      <div class="ts-content is-dense ts-grid">
+        <div class="column is-fluid">
+          <h2 data-i18n="export-header" class="ts-header is-heavy">Import / Export</h2>
+        </div>
+        <div class="column is-end-aligned">
+          <button id="copy-export-button" type="button" popovertarget="copy-export-popup"
+            class="ts-button is-small is-dense is-secondary is-icon">
+            <span class="ts-icon is-clipboard-icon is-bold"></span>
+          </button>
+          <div class="ts-popover" id="copy-export-popup" popover>
+            <div class="ts-content is-raised is-small is-dense">
+              Copied!
+            </div>
+            <div class="symbol">
+              <span class="ts-icon is-check-icon"></span>
+            </div>
+          </div>
+        </div>
       </div>
       <div id="error-message-notice" class="ts-content is-dense has-hidden">
         <div class="ts-notice is-small is-dense is-negative">

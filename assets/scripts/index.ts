@@ -287,6 +287,10 @@ class View {
         addRowButton.addEventListener(
             "click", (event) => this.controller.onAddRowButtonClick(event)
         );
+        const copyExportButton = document.getElementById("copy-export-button") as HTMLButtonElement;
+        copyExportButton.addEventListener(
+            "click", (event) => this.controller.onCopyExportButtonClick(event)
+        );
         const resetDataButton = document.getElementById("reset-data-button") as HTMLButtonElement;
         resetDataButton.addEventListener(
             "click", (event) => this.controller.onResetDataClick(event)
@@ -294,6 +298,18 @@ class View {
         const resetAllButton = document.getElementById("reset-all-button") as HTMLButtonElement;
         resetAllButton.addEventListener(
             "click", (event) => this.controller.onResetAllClick(event)
+        );
+        const currentTokensInput = document.getElementById("current-tokens-value") as HTMLInputElement;
+        currentTokensInput.addEventListener(
+            "input", (event) => this.controller.onCurrentTokensChange(event)
+        );
+        const tokensPerMissionInput = document.getElementById("tokens-per-mission-value") as HTMLInputElement;
+        tokensPerMissionInput.addEventListener(
+            "input", (event) => this.controller.onTokensPerMissionChange(event)
+        );
+        const staminaPerMissionInput = document.getElementById("stamina-per-mission-value") as HTMLInputElement;
+        staminaPerMissionInput.addEventListener(
+            "input", (event) => this.controller.onStaminaPerMissionChange(event)
         );
     }
 
@@ -350,10 +366,12 @@ class View {
             const quantityInput = rowElement.querySelector<HTMLInputElement>('[data-role="quantity"]')!;
             quantityInput.value = item.quantity.toString();
             quantityInput.dataset.index = index.toString();
+            quantityInput.parentElement!.classList.toggle("is-solid", !item.enable);
 
             const priceInput = rowElement.querySelector<HTMLInputElement>('[data-role="price"]')!;
             priceInput.value = item.price.toString();
             priceInput.dataset.index = index.toString();
+            priceInput.parentElement!.classList.toggle("is-solid", !item.enable);
 
             const deleteButton = rowElement.querySelector<HTMLButtonElement>('[data-role="delete"]')!;
             deleteButton.dataset.index = index.toString();
@@ -474,6 +492,7 @@ class Controller {
         const element = event.currentTarget as HTMLInputElement;
         const index = Number(element.dataset.index);
         this.model.data.updateShopItem(index, { enable: element.checked });
+        this.view.renderTable(this.model.data);
         this.view.renderResults(this.model.data);
         this.view.renderExport(this.model.data);
         this.setLocalStorage();
@@ -523,6 +542,30 @@ class Controller {
         this.setLocalStorage();
     }
 
+    onCurrentTokensChange(event: Event) {
+        const element = event.currentTarget as HTMLInputElement;
+        this.model.data.currentTokens = Number(element.value);
+        this.view.renderResults(this.model.data);
+        this.view.renderExport(this.model.data);
+        this.setLocalStorage();
+    }
+
+    onTokensPerMissionChange(event: Event) {
+        const element = event.currentTarget as HTMLInputElement;
+        this.model.data.tokensPerMission = Number(element.value);
+        this.view.renderResults(this.model.data);
+        this.view.renderExport(this.model.data);
+        this.setLocalStorage();
+    }
+
+    onStaminaPerMissionChange(event: Event) {
+        const element = event.currentTarget as HTMLInputElement;
+        this.model.data.staminaPerMission = Number(element.value);
+        this.view.renderResults(this.model.data);
+        this.view.renderExport(this.model.data);
+        this.setLocalStorage();
+    }
+
     onDataExportTextareaChange(event: Event) {
         const element = event.currentTarget as HTMLInputElement;
         try {
@@ -536,6 +579,10 @@ class Controller {
             this.view.displayError(e instanceof Error ? e.message : String(e));
             return;
         }
+    }
+
+    onCopyExportButtonClick(event: Event): void {
+        navigator.clipboard.writeText(JSON.stringify(this.model.data));
     }
 
     onResetDataClick(event: Event): void {
