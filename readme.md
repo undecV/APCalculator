@@ -14,14 +14,6 @@ This is an AP (Stamina) calculator designed for BlueArchive events.
 2. Enter the values.
 3. View the results.
 
-### Tips
-
-If only simple calculations are required, in other words, if the "Total Tokens Needed" is already known, you can set the store item to have a Quantity of "1" and a Price equal to the "Total Tokens Needed". For example:
-
-```json
-{"shop":[{"quantity":1,"price":1000}],"currentTokens":250,"tokensPerMission":50,"staminaPerMission":20}
-```
-
 ## Features
 
 - Supported languages: English, Traditional Chinese.
@@ -31,15 +23,23 @@ If only simple calculations are required, in other words, if the "Total Tokens N
 - 🆕 Enable \ disable, add \ delete data rows.
 - 🆕 Will remember your input data and interface settings.
 - 🆕 Reset data and settings.
-- Completely offline.
-- Ibuki-friendly.
+- Ibuki-friendly design.
 
 ## Notes
 
 - All calculations are performed locally in the browser; JavaScript must be enabled.
-- If you're familiar with JSON, directly editing the import / export content may be faster.
 - ~~If you're worried about incorrect values, you can verify them using `/docs/stamina.ipynb`.~~
 - ~~Schale and Yuuka may not endorse the calculation results.~~
+
+### Tips
+
+If only simple calculations are required, in other words, if the "Total Tokens Needed" is already known, you can set the store item to have a Quantity of "1" and a Price equal to the "Total Tokens Needed". For example:
+
+```json
+{"shop":[{"quantity":1,"price":1000}],"currentTokens":250,"tokensPerMission":50,"staminaPerMission":20}
+```
+
+If you're familiar with JSON, directly editing the import / export content may be faster.
 
 ## Reference
 

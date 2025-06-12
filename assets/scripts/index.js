@@ -44,7 +44,7 @@ class UserInterfaceStateModel {
                 "remaining-missions-label": "剩餘任務",
                 "remaining-stamina-unit": "次",
                 "remaining-stamina-label": "所需體力",
-                "export-header": "輸入／輸出",
+                "export-header": "匯入＼匯出",
                 "disclaimer": "<del>夏萊和優香可能不會對計算結果背書。</del>",
                 "reset-data-button-label": "重設資料",
                 "reset-all-button-label": "重設全部",
