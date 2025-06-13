@@ -1,6 +1,6 @@
-![Stamina Calculator](/assets/images/logo.png)
+![Stamina Calculator](/assets/images/open_graph.png)
 
-# AP / Stamina Calculator
+# AP (Stamina) Calculator
 
 This is an AP (Stamina) calculator designed for BlueArchive events.
 
@@ -18,6 +18,7 @@ This is an AP (Stamina) calculator designed for BlueArchive events.
 
 - Supported languages: English, Traditional Chinese.
 - 🆕 Supported themes: Light, Dark.
+- 🆕 PWA.
 - Real-time interaction, input validation.
 - Support JSON import and export.
 - 🆕 Enable \ disable, add \ delete data rows.

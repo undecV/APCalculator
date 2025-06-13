@@ -11,7 +11,7 @@ class UserInterfaceStateModel {
 
     i18n: I18nDict = {
         "en": {
-            "page-title": "Stamina Calculator",
+            "page-title": "AP (Stamina) Calculator",
             "theme-selector-label": "Theme:",
             "language-selector-label": "Language:",
             "input-header": "Input",

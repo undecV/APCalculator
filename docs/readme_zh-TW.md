@@ -1,6 +1,6 @@
-![Stamina Calculator](/assets/images/logo.png)
+![Stamina Calculator](/assets/images/open_graph.png)
 
-# AP / Stamina Calculator
+# AP (Stamina) Calculator
 
 這是一個為 BlueArchive 活動設計的 AP (Stamina) 計算器。
 
@@ -18,6 +18,7 @@
 
 - 支援語言：英語、正體中文。
 - 🆕 支援主題：明亮、暗黑。
+- 🆕 PWA 應用。
 - 即時交互、輸入驗證。
 - 🆕 啟用＼禁用、新增＼刪除資料列。
 - 支援 JSON 匯入＼匯出。

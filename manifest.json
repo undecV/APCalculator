@@ -1,0 +1,47 @@
+{
+    "id": "./?source=pwa",
+    "name": "AP Calculator",
+    "short_name": "APCalc",
+    "start_url": "./index.html?source=pwa",
+    "display": "standalone",
+    "background_color": "#272727",
+    "theme_color": "#1290ff",
+    "orientation": "portrait",
+    "scope": "./",
+    "icons": [
+                {
+            "src": "./assets/images/icon_64.png",
+            "sizes": "64x64",
+            "type": "image/png"
+        },{
+            "src": "./assets/images/icon_512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "./docs/screenshots/screenshot_en_1_wide.png",
+            "sizes": "1920x1822",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "./docs/screenshots/screenshot_en_1_light.png",
+            "sizes": "562x877",
+            "type": "image/png"
+        },
+        {
+            "src": "./docs/screenshots/screenshot_en_2_dark.png",
+            "sizes": "562x877",
+            "type": "image/png"
+        }
+    ],
+    "lang": "en",
+    "description": "An AP (Stamina) calculator.",
+    "categories": [
+        "productivity",
+        "games",
+        "utilities"
+    ]
+}

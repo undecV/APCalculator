@@ -2,19 +2,33 @@
 <html lang="en" class="is-dark is-rounded">
 
 <head>
-  <title data-i18n="page-title">Stamina Calculator</title>
+  <title data-i18n="page-title">AP (Stamina) Calculator</title>
+
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" href="./assets/images/icon_64.png" sizes="64x64">
+  <link rel="icon" type="image/png" href="./assets/images/icon_512.png" sizes="512x512">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="canonical" href="https://undecv.github.io/APCalculator/">
+  <meta name="description" content="An AP (Stamina) calculator.">
+
+  <meta name="theme-color" content="#1290ff">
+  <link rel="manifest" href="./manifest.json" type="application/manifest+json">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://undecv.github.io/APCalculator/">
+  <meta property="og:title" content="AP Calculator">
+  <meta property="og:description" content="An AP (Stamina) calculator.">
+  <meta property="og:image" content="https://undecv.github.io/APCalculator/assets/images/open_graph.png">
+  <meta property="og:locale" content="en">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/5.0.2/tocas.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/5.0.2/tocas.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
 
   <style>
     div.ts-container.is-very-very-narrow {
@@ -42,7 +56,7 @@
     <div class="ts-box">
       <div class="ts-content is-dense ts-wrap is-compact is-vertical">
         <form id="theme-selector" class="ts-control is-wide">
-          <label data-i18n="theme-selector-label" class="is-start-aligned" for="theme-selector">Theme:</label>
+          <div data-i18n="theme-selector-label" class="is-start-aligned">Theme:</div>
           <div class="ts-selection is-circular is-fluid is-small">
             <label class="item">
               <input id="theme-selector-light" type="radio" name="theme-selector" value="light">
@@ -132,21 +146,21 @@
         </div>
 
         <div class="ts-control is-wide">
-          <label data-i18n="current-tokens-label" for="current-tokens">Current Tokens:</label>
+          <label data-i18n="current-tokens-label" for="current-tokens-value">Current Tokens:</label>
           <div class="ts-input is-start-icon is-small is-dense">
             <span class="ts-icon is-sack-dollar-icon"></span>
             <input id="current-tokens-value" type="number" value="0" min="0" step="1">
           </div>
         </div>
         <div class="ts-control is-wide">
-          <label data-i18n="tokens-per-mission-label" for="tokens-per-mission">Tokens Per Mission:</label>
+          <label data-i18n="tokens-per-mission-label" for="tokens-per-mission-value">Tokens Per Mission:</label>
           <div class="ts-input is-start-icon is-small is-dense">
             <span class="ts-icon is-hand-holding-dollar-icon"></span>
             <input id="tokens-per-mission-value" type="number" value="0" min="0" step="1">
           </div>
         </div>
         <div class="ts-control is-wide">
-          <label data-i18n="stamina-per-mission-label" for="stamina-per-mission">Stamina Per Mission:</label>
+          <label data-i18n="stamina-per-mission-label" for="stamina-per-mission-value">Stamina Per Mission:</label>
           <div class="ts-input is-start-icon is-small is-dense">
             <span class="ts-icon is-mug-saucer-icon"></span>
             <input id="stamina-per-mission-value" type="number" value="0" min="0" step="1">
