@@ -28,6 +28,8 @@ class UserInterfaceStateModel {
                 "reset-all-button-label": "Reset All",
                 "save-data-button": "Save",
                 "saved-data-item-name-input-placeholder": "Name this save...",
+                "update-refresh-notice-title": "NOTICE",
+                "update-refresh-notice-content": 'The app has been updated! If there is any problem, please hard-refresh the page by pressing <span class="ts-text is-key">Ctrl</span> + <span class="ts-text is-key">F5</span> to apply the changes.',
             },
             "zh-TW": {
                 "page-title": "體力計算器",
@@ -52,6 +54,8 @@ class UserInterfaceStateModel {
                 "reset-all-button-label": "重設全部",
                 "save-data-button": "存檔",
                 "saved-data-item-name-input-placeholder": "命名此存檔...",
+                "update-refresh-notice-title": "注意",
+                "update-refresh-notice-content": '應用程式已更新！若有問題請按 <span class="ts-text is-key">Ctrl</span> + <span class="ts-text is-key">F5</span> 強制重新整理頁面以套用更改。',
             }
         };
         this._theme = "dark";
