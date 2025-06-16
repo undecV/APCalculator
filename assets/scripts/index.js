@@ -26,6 +26,8 @@ class UserInterfaceStateModel {
                 "disclaimer": "<del>Schale and Yuuka<br />may not endorse the calculation results.</del>",
                 "reset-data-button-label": "Reset Data",
                 "reset-all-button-label": "Reset All",
+                "save-data-button": "Save",
+                "saved-data-item-name-input-placeholder": "Name this save...",
             },
             "zh-TW": {
                 "page-title": "體力計算器",
@@ -48,6 +50,8 @@ class UserInterfaceStateModel {
                 "disclaimer": "<del>夏萊和優香可能不會對計算結果背書。</del>",
                 "reset-data-button-label": "重設資料",
                 "reset-all-button-label": "重設全部",
+                "save-data-button": "存檔",
+                "saved-data-item-name-input-placeholder": "命名此存檔...",
             }
         };
         this._theme = "dark";
@@ -85,7 +89,7 @@ class UserInterfaceStateModel {
     }
     static fromJSON(json) {
         var _a, _b;
-        return new UserInterfaceStateModel((_a = json.theme) !== null && _a !== void 0 ? _a : "light", (_b = json.language) !== null && _b !== void 0 ? _b : "en");
+        return new UserInterfaceStateModel((_a = json.theme) !== null && _a !== void 0 ? _a : "dark", (_b = json.language) !== null && _b !== void 0 ? _b : "en");
     }
 }
 class ShopItem {
@@ -132,10 +136,10 @@ class APCalculatorDataModel {
             new ShopItem(70, 5, false),
             new ShopItem(35, 15, true),
             new ShopItem(20, 50, true),
-            new ShopItem(10, 200, true)
+            new ShopItem(10, 200, true),
         ];
-        this._currentTokens = 3472;
-        this._tokensPerMission = 72;
+        this._currentTokens = 3067;
+        this._tokensPerMission = 60;
         this._staminaPerMission = 20;
     }
     get shop() {
@@ -173,7 +177,6 @@ class APCalculatorDataModel {
     set staminaPerMission(value) {
         this._staminaPerMission = Math.max(0, value);
     }
-    /** 所有啟用項目的總代幣消耗 */
     get totalTokens() {
         let total = 0;
         for (const item of this._shop) {
@@ -183,24 +186,20 @@ class APCalculatorDataModel {
         }
         return total;
     }
-    /** 還需要的代幣數 */
     get remainingTokens() {
         return Math.max(this.totalTokens - this._currentTokens, 0);
     }
-    /** 任務完成度（百分比） */
     get completionProgress() {
         if (this.totalTokens === 0)
             return 100;
         const ratio = this._currentTokens / this.totalTokens;
         return Math.min(Math.floor(ratio * 100), 100);
     }
-    /** 還需要幾場任務（可為小數） */
     get remainingMissions() {
         if (this._tokensPerMission === 0)
             return 0;
         return this.remainingTokens / this._tokensPerMission;
     }
-    /** 還需要多少體力 */
     get remainingStamina() {
         return Math.ceil(this.remainingMissions) * this._staminaPerMission;
     }
@@ -226,6 +225,7 @@ class Model {
     constructor() {
         this.ui = new UserInterfaceStateModel();
         this.data = new APCalculatorDataModel();
+        this.dataset = {};
     }
 }
 class View {
@@ -243,16 +243,18 @@ class View {
         addRowButton.addEventListener("click", (event) => this.controller.onAddRowButtonClick(event));
         const copyExportButton = document.getElementById("copy-export-button");
         copyExportButton.addEventListener("click", (event) => this.controller.onCopyExportButtonClick(event));
-        const resetDataButton = document.getElementById("reset-data-button");
-        resetDataButton.addEventListener("click", (event) => this.controller.onResetDataClick(event));
-        const resetAllButton = document.getElementById("reset-all-button");
-        resetAllButton.addEventListener("click", (event) => this.controller.onResetAllClick(event));
         const currentTokensInput = document.getElementById("current-tokens-value");
         currentTokensInput.addEventListener("input", (event) => this.controller.onCurrentTokensChange(event));
         const tokensPerMissionInput = document.getElementById("tokens-per-mission-value");
         tokensPerMissionInput.addEventListener("input", (event) => this.controller.onTokensPerMissionChange(event));
         const staminaPerMissionInput = document.getElementById("stamina-per-mission-value");
         staminaPerMissionInput.addEventListener("input", (event) => this.controller.onStaminaPerMissionChange(event));
+        const resetDataButton = document.getElementById("reset-data-button");
+        resetDataButton.addEventListener("click", (event) => this.controller.onResetDataClick(event));
+        const resetAllButton = document.getElementById("reset-all-button");
+        resetAllButton.addEventListener("click", (event) => this.controller.onResetAllClick(event));
+        const saveDataButton = document.getElementById("save-data-button");
+        saveDataButton.addEventListener("click", (event) => this.controller.onSaveDataButtonClick(event));
     }
     updateTheme(theme) {
         switch (theme) {
@@ -276,12 +278,33 @@ class View {
     updateLanguage(language, i18n, fallbackLang = "en") {
         document.getElementById("language-selector").value = language;
         const elements = document.querySelectorAll("[data-i18n]");
+        const suffixes = [
+            ["-placeholder", (el, value) => {
+                    if ("placeholder" in el)
+                        el.placeholder = value;
+                }],
+        ];
         elements.forEach(el => {
-            var _a, _b, _c;
+            var _a, _b, _c, _d;
             const key = el.dataset.i18n;
-            const text = key && ((_b = (_a = i18n[language]) === null || _a === void 0 ? void 0 : _a[key]) !== null && _b !== void 0 ? _b : (_c = i18n[fallbackLang]) === null || _c === void 0 ? void 0 : _c[key]);
-            if (key && text) {
-                el.innerHTML = text;
+            if (!key)
+                return;
+            const langDict = (_a = i18n[language]) !== null && _a !== void 0 ? _a : {};
+            const fallbackDict = (_b = i18n[fallbackLang]) !== null && _b !== void 0 ? _b : {};
+            let matched = false;
+            for (const [suffix, apply] of suffixes) {
+                const dictKey = key + suffix;
+                const value = (_c = langDict[dictKey]) !== null && _c !== void 0 ? _c : fallbackDict[dictKey];
+                if (value !== undefined) {
+                    apply(el, value);
+                    matched = true;
+                }
+            }
+            if (!matched) {
+                const text = (_d = langDict[key]) !== null && _d !== void 0 ? _d : fallbackDict[key];
+                if (text !== undefined) {
+                    el.innerHTML = text;
+                }
             }
         });
     }
@@ -339,22 +362,97 @@ class View {
     }
     renderExport(data) {
         document.getElementById("data-export-textarea").value = JSON.stringify(data);
-        this.displayError();
+        this.displayNotice();
     }
-    displayError(message) {
-        const errorMessageNotice = document.getElementById("error-message-notice");
-        const errorMessageContent = document.getElementById("error-message-content");
-        if (!message) {
-            errorMessageNotice.classList.toggle("has-hidden", true);
+    displayNotice(title, message, negative) {
+        const noticeMessageContainer = document.getElementById("notice-message-container");
+        const noticeMessageBody = document.getElementById("notice-message-body");
+        const noticeMessageTitle = document.getElementById("notice-message-title");
+        const noticeMessageContent = document.getElementById("notice-message-content");
+        if (title === undefined || message === undefined || negative === undefined) {
+            noticeMessageContainer.classList.toggle("has-hidden", true);
+            return;
         }
-        else {
-            errorMessageNotice.classList.toggle("has-hidden", false);
-            errorMessageContent.textContent = message;
+        noticeMessageContainer.classList.toggle("has-hidden", false);
+        noticeMessageTitle.textContent = title;
+        noticeMessageContent.textContent = message;
+        noticeMessageBody.classList.toggle("is-negative", negative);
+    }
+    renderDataset(calcDataset) {
+        const container = document.getElementById("saved-data-items-container");
+        const template = document.getElementById("saved-data-item-template");
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
         }
+        Object.keys(calcDataset).forEach(key => {
+            const node = template.content.firstElementChild.cloneNode(true);
+            const loadBtn = node.querySelector('[data-role="load"]');
+            loadBtn.textContent = decodeURIComponent(key);
+            loadBtn.dataset.key = key;
+            const deleteBtn = node.querySelector('[data-role="delete"]');
+            deleteBtn.dataset.key = key;
+            loadBtn.addEventListener("click", (event) => {
+                this.controller.onLoadSavedDataItem(event);
+            });
+            deleteBtn.addEventListener("click", (event) => {
+                this.controller.onDeleteSavedDataItem(event);
+            });
+            container.appendChild(node);
+        });
     }
 }
 class Controller {
     constructor(model) {
+        this._defaultDatasetString = `
+        {
+            "1": {
+                "shop": [
+                { "quantity": 90, "price": 1, "enable": true },
+                { "quantity": 95, "price": 3, "enable": true },
+                { "quantity": 30, "price": 12, "enable": true },
+                { "quantity": 12, "price": 60, "enable": true },
+                { "quantity": 30, "price": 10, "enable": true },
+                { "quantity": 18, "price": 30, "enable": true },
+                { "quantity": 12, "price": 100, "enable": true },
+                { "quantity": 2, "price": 300, "enable": true },
+                { "quantity": 60, "price": 5, "enable": false },
+                { "quantity": 30, "price": 15, "enable": false },
+                { "quantity": 12, "price": 50, "enable": false },
+                { "quantity": 6, "price": 200, "enable": false },
+                { "quantity": 10, "price": 200, "enable": true },
+                { "quantity": 10, "price": 200, "enable": true },
+                { "quantity": 1, "price": 300, "enable": true },
+                { "quantity": 1, "price": 2000, "enable": true }
+                ],
+                "currentTokens": 10000,
+                "tokensPerMission": 66,
+                "staminaPerMission": 20
+            },
+            "2": {
+                "shop": [
+                { "quantity": 180, "price": 1, "enable": true },
+                { "quantity": 95, "price": 4, "enable": true },
+                { "quantity": 30, "price": 15, "enable": true },
+                { "quantity": 12, "price": 60, "enable": true },
+                { "quantity": 50, "price": 5, "enable": true },
+                { "quantity": 38, "price": 15, "enable": true },
+                { "quantity": 25, "price": 50, "enable": true },
+                { "quantity": 15, "price": 200, "enable": true },
+                { "quantity": 60, "price": 5, "enable": false },
+                { "quantity": 30, "price": 15, "enable": false },
+                { "quantity": 12, "price": 50, "enable": false },
+                { "quantity": 6, "price": 200, "enable": false },
+                { "quantity": 10, "price": 200, "enable": true },
+                { "quantity": 10, "price": 200, "enable": true },
+                { "quantity": 1, "price": 300, "enable": true },
+                { "quantity": 1, "price": 2000, "enable": true }
+                ],
+                "currentTokens": 10000,
+                "tokensPerMission": 66,
+                "staminaPerMission": 20
+            }
+        }
+        `;
         this.model = model;
         this.view = new View(this);
     }
@@ -368,6 +466,7 @@ class Controller {
         this.view.renderInputs(this.model.data);
         this.view.renderResults(this.model.data);
         this.view.renderExport(this.model.data);
+        this.view.renderDataset(this.model.dataset);
     }
     getLocalStorage() {
         const ui_raw = localStorage.getItem("ui-state");
@@ -379,13 +478,39 @@ class Controller {
             parsedData = localStorageData ? JSON.parse(localStorageData) : null;
         }
         catch (e) {
-            console.warn("解析 calc-data 時失敗，使用預設資料", e);
+            console.warn("Failed to parse calc-data, using default data", e);
         }
         this.model.data = parsedData ? APCalculatorDataModel.fromJSON(parsedData) : new APCalculatorDataModel();
+        const datasetRaw = localStorage.getItem("calc-dataset");
+        let datasetParsed = {};
+        try {
+            datasetParsed = datasetRaw ? JSON.parse(datasetRaw) : {};
+        }
+        catch (e) {
+            console.warn("Failed to parse calc-dataset, using empty dataset", e);
+        }
+        // If dataset is empty, try to load from _defaultDatasetString
+        if (!datasetRaw || Object.keys(datasetParsed).length === 0) {
+            try {
+                datasetParsed = JSON.parse(this._defaultDatasetString);
+            }
+            catch (e) {
+                console.warn("Failed to parse _defaultDatasetString", e);
+            }
+        }
+        this.model.dataset = {};
+        for (const key in datasetParsed) {
+            this.model.dataset[key] = APCalculatorDataModel.fromJSON(datasetParsed[key]);
+        }
     }
     setLocalStorage() {
         localStorage.setItem("ui-state", JSON.stringify(this.model.ui.toJSON()));
         localStorage.setItem("calc-data", JSON.stringify(this.model.data.toJSON()));
+        const datasetObj = {};
+        for (const key in this.model.dataset) {
+            datasetObj[key] = this.model.dataset[key].toJSON();
+        }
+        localStorage.setItem("calc-dataset", JSON.stringify(datasetObj));
     }
     onThemeToggle(event) {
         var _a;
@@ -481,34 +606,68 @@ class Controller {
             this.setLocalStorage();
         }
         catch (e) {
-            this.view.displayError(e instanceof Error ? e.message : String(e));
+            const message = e instanceof Error ? e.message : String(e);
+            this.view.displayNotice("ERROR", message, true);
             return;
         }
+    }
+    onSaveDataButtonClick(event) {
+        const name_input = document.getElementById("saved-data-item-name-input");
+        let key = name_input.value.trim();
+        key = encodeURIComponent(key.replace(/["\\]/g, '\\$&'));
+        if (!key)
+            return;
+        this.model.dataset[key] = APCalculatorDataModel.fromJSON(this.model.data.toJSON());
+        this.setLocalStorage();
+        this.view.renderDataset(this.model.dataset);
+        name_input.value = "";
+    }
+    onLoadSavedDataItem(event) {
+        const name_input = document.getElementById("saved-data-item-name-input");
+        const element = event.currentTarget;
+        const key = element.dataset.key;
+        if (!key)
+            return;
+        const savedData = this.model.dataset[key];
+        if (!savedData)
+            return;
+        this.model.data = APCalculatorDataModel.fromJSON(savedData.toJSON());
+        name_input.value = decodeURIComponent(key);
+        this.view.renderTable(this.model.data);
+        this.view.renderInputs(this.model.data);
+        this.view.renderResults(this.model.data);
+        this.view.renderExport(this.model.data);
+        this.setLocalStorage();
+    }
+    onDeleteSavedDataItem(event) {
+        const element = event.currentTarget;
+        const key = element.dataset.key;
+        if (!key)
+            return;
+        delete this.model.dataset[key];
+        this.setLocalStorage();
+        this.view.renderDataset(this.model.dataset);
     }
     onCopyExportButtonClick(event) {
         navigator.clipboard.writeText(JSON.stringify(this.model.data));
     }
     onResetDataClick(event) {
         localStorage.removeItem("calc-data");
-        this.model.data = new APCalculatorDataModel();
+        localStorage.removeItem("calc-dataset");
+        this.getLocalStorage();
         this.view.renderTable(this.model.data);
         this.view.renderInputs(this.model.data);
         this.view.renderResults(this.model.data);
         this.view.renderExport(this.model.data);
+        this.view.renderDataset(this.model.dataset);
         this.setLocalStorage();
     }
     onResetAllClick(event) {
         localStorage.removeItem("ui-state");
-        localStorage.removeItem("calc-data");
-        this.model.ui = new UserInterfaceStateModel();
-        this.model.data = new APCalculatorDataModel();
+        this.getLocalStorage();
         this.view.updateTheme(this.model.ui.theme);
         this.view.updateLanguage(this.model.ui.language, this.model.ui.i18n, this.model.ui.fallbackLanguage);
-        this.view.renderTable(this.model.data);
-        this.view.renderInputs(this.model.data);
-        this.view.renderResults(this.model.data);
-        this.view.renderExport(this.model.data);
-        this.setLocalStorage();
+        this.onResetDataClick(event);
     }
 }
 const model = new Model();
